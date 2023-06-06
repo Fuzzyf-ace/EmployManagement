@@ -102,4 +102,12 @@ public class Employee {
         this.userRole = userRole;
     }
 
+    public Employer getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(Employer employer) {
+        this.employer = employer;
+    }
+
 }

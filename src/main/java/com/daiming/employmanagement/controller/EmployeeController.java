@@ -1,32 +1,45 @@
 package com.daiming.employmanagement.controller;
 
 import com.daiming.employmanagement.model.Employee;
+import com.daiming.employmanagement.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class EmployeeController {
 
-    @PutMapping("/addEmployee")
-    public void addEmployee(Employee employee) {
+    @Autowired
+    EmployeeService employeeService;
+    @PutMapping("/employer/addEmployee")
+    public void addEmployee(@RequestBody Employee employee, Principal principal) {
+        principal.getName();
+        System.out.println(principal.getName());
+//        employeeService.addEmployee();
 
     }
 
-    @DeleteMapping("/deleteEmployee")
-    public void deleteEmployee(Employee employee) {
+    @DeleteMapping("/employer/deleteEmployee")
+    public void deleteEmployee(@RequestBody Employee employee) {
 
     }
 
-    @PostMapping("/updateEmployee")
-    public void updateEmployee(Employee employee) {
+    @PostMapping("/employer/updateEmployee")
+    public void updateEmployee(@RequestBody Employee employee) {
 
     }
 
-    @GetMapping("/getEmployees")
-    public List<Employee> getEmployees() {
-        List<Employee> employeeList = new ArrayList<>();
-        return employeeList;
+    @GetMapping("/employer/getEmployees")
+    public List<Employee> getEmployees(Principal principal) {
+        Pageable pageable = PageRequest.of(0, 5); // Create a Pageable object for pagination
+        Page<Employee> employeesPage = employeeService.getEmployeesByEmployer(0L, pageable);
+        List<Employee> employees = employeesPage.getContent();
+        return employees;
     }
 }

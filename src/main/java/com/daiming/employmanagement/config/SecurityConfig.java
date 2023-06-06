@@ -1,6 +1,7 @@
 package com.daiming.employmanagement.config;
 
 import com.daiming.employmanagement.filter.JwtFilter;
+import com.daiming.employmanagement.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +32,12 @@ public class SecurityConfig {
                 .csrf( csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .anyRequest().permitAll();
-//                            .requestMatchers("/").permitAll()
-//                            .requestMatchers("/register").permitAll()
-//                            .requestMatchers("/login").permitAll()
-//                            .anyRequest().authenticated();
+                            .requestMatchers("/hello").permitAll()
+                            .requestMatchers("/employee/login").permitAll()
+                            .requestMatchers("/employer/login").permitAll()
+                            .requestMatchers("/employer/signup").permitAll()
+                            .requestMatchers("/employee/signup").hasRole(UserRole.EMPLOYER.name())
+                            .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())

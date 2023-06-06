@@ -83,4 +83,11 @@ public class Employer {
         this.userRole = userRole;
     }
 
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
 }
