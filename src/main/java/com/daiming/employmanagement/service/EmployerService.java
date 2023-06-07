@@ -37,7 +37,7 @@ public class EmployerService {
             throw new AuthenticationFailedException("Wrong password");
         }
 
-        return new Token(jwtUtil.generateToken(employer.getEmail()));
+        return new Token(jwtUtil.generateToken("EMPLOYER" + employer.getEmail()));
 
     }
 

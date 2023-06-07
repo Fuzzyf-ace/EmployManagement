@@ -1,5 +1,6 @@
 package com.daiming.employmanagement.service;
 
+import com.daiming.employmanagement.exception.AddUserFailedException;
 import com.daiming.employmanagement.exception.AuthenticationFailedException;
 import com.daiming.employmanagement.exception.UserDoesNotExistException;
 import com.daiming.employmanagement.model.Employee;
@@ -29,27 +30,12 @@ public class EmployeeService {
     @Autowired
     private EmployerRepository employerRepository;
 
-    @Transactional
-    public void addEmployee(Employee employee, String employerEmail) {
-        employee.setEmployer(employerRepository.findByEmail(employerEmail));
-        employeeRepository.save(employee);
-    }
-
-    @Transactional
-    public List<Employee> getEmployeesByEmployer(String employerEmail) {
-        Employer employer = employerRepository.findByEmail(employerEmail);
-        return employeeRepository.findEmployeesByEmployer(employer);
-    }
-
-
     public Token employeeLogin(Employee employee) {
 
         if (!authenticate(employee)) {
             throw new AuthenticationFailedException("Wrong password");
         }
-
-        return new Token(jwtUtil.generateToken(employee.getEmail()));
-
+        return new Token(jwtUtil.generateToken("EMPLOYEE" + employee.getEmail()));
     }
 
     private boolean authenticate(Employee employee) {
@@ -65,5 +51,75 @@ public class EmployeeService {
         return false;
     }
 
+    @Transactional
+    public void addEmployee(Employee employee, String employerEmail) {
+        //encrypt password before storing
+        employee.setEmployer(employerRepository.findByEmail(employerEmail));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        //assign employer before storing
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        try {
+            employeeRepository.save(employee);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AddUserFailedException("add user failed");
+        }
+    }
+
+    @Transactional
+    public List<Employee> getEmployeesByEmployer(String employerEmail) {
+        Employer employer = employerRepository.findByEmail(employerEmail);
+        return employeeRepository.findEmployeesByEmployer(employer);
+    }
+    @Transactional
+    public List<Employee> getAvailableEmployeesByEmployer(String employerEmail) {
+        Employer employer = employerRepository.findByEmail(employerEmail);
+        return employeeRepository.findEmployeesByEmployerAndActiveIsTrue(employer);
+    }
+
+    /**
+     * employer can manage employee's and pay rate
+     * @param employee
+     */
+    public void updateEmployeeByEmployer(Employee employee) {
+        Employee storedEmployee =  employeeRepository.findByEmail(employee.getEmail());
+        if (employee.getPayRate() != null) {
+            storedEmployee.setPayRate(employee.getPayRate());
+        }
+        employeeRepository.save(storedEmployee);
+    }
+
+    /**
+     * employees can change their own email, password, active status, firstname, lastname
+     * @param employee
+     */
+    public void updateEmployeeByEmployee(Employee employee) {
+        Employee storedEmployee =  employeeRepository.findByEmail(employee.getEmail());
+        if (employee.getEmail() != null) {
+            storedEmployee.setEmail(employee.getEmail());
+        }
+        if (employee.getPassword() != null) {
+            storedEmployee.setPassword(employee.getPassword());
+        }
+        if (employee.getActive() != null) {
+            storedEmployee.setActive(employee.getActive());
+        }
+        if (employee.getFirstName() != null) {
+            storedEmployee.setFirstName(employee.getFirstName());
+        }
+        if (employee.getLastName() != null) {
+            storedEmployee.setLastName(employee.getLastName());
+        }
+        employeeRepository.save(storedEmployee);
+    }
+
+    @Transactional
+    public void deleteEmployee(Employee employee) {
+        employee = employeeRepository.findByEmail(employee.getEmail());
+        Employer employer = employee.getEmployer();
+        employer.getEmployees().remove(employee);
+        employerRepository.save(employer);
+        employeeRepository.deleteEmployeeByEmail(employee.getEmail());
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.daiming.employmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -33,6 +34,7 @@ public class Employer {
     private UserRole userRole = UserRole.EMPLOYER;
 
     @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Employee> employees;
 
     public Long getId() {

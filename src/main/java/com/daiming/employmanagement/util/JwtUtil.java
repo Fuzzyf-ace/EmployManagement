@@ -32,7 +32,13 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
+        String subject = extractClaims(token).getSubject();
+        //remove UserRole which has length 8
+        return subject.substring(8, subject.length());
+
+    }
+    public String extractUserRole(String token) {
+        return extractClaims(token).getSubject().substring(0,8);
     }
 
     public Date extractExpiration(String token) {

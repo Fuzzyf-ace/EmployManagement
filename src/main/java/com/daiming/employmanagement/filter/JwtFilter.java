@@ -37,11 +37,15 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         //validate token
         token = authorizationHeader.substring(PREFIX.length());
+//        System.out.println("parameters:");
+//        request.getParameterNames().asIterator().forEachRemaining(System.out::println);
         try {
             if (token != null && jwtUtil.validateToken(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String username = jwtUtil.extractUsername(token);
-                System.out.println(username);
-                List<GrantedAuthority> grantedAuthorityList = Arrays.asList(new GrantedAuthority[]{new SimpleGrantedAuthority(UserRole.EMPLOYER.name())});
+                String userRole = jwtUtil.extractUserRole(token);
+                System.out.println("username: " + username);
+                System.out.println("userRole: " + userRole);
+                List<GrantedAuthority> grantedAuthorityList = Arrays.asList(new GrantedAuthority[]{new SimpleGrantedAuthority(userRole)});
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, null, grantedAuthorityList);
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -49,7 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+//        System.out.println(SecurityContextHolder.getContext().getAuthentication());
 
         filterChain.doFilter(request, response);
 
