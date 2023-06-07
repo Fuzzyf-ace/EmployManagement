@@ -3,14 +3,19 @@ package com.daiming.employmanagement.service;
 import com.daiming.employmanagement.exception.AuthenticationFailedException;
 import com.daiming.employmanagement.exception.UserDoesNotExistException;
 import com.daiming.employmanagement.model.Employee;
+import com.daiming.employmanagement.model.Employer;
 import com.daiming.employmanagement.model.Token;
 import com.daiming.employmanagement.repository.EmployeeRepository;
+import com.daiming.employmanagement.repository.EmployerRepository;
 import com.daiming.employmanagement.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class EmployeeService {
@@ -21,12 +26,19 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public void addEmployee(Employee employee) {
+    @Autowired
+    private EmployerRepository employerRepository;
+
+    @Transactional
+    public void addEmployee(Employee employee, String employerEmail) {
+        employee.setEmployer(employerRepository.findByEmail(employerEmail));
         employeeRepository.save(employee);
     }
 
-    public Page<Employee> getEmployeesByEmployer(Long employerId, Pageable pageable) {
-        return employeeRepository.findEmployeesByEmployer(pageable, employerId);
+    @Transactional
+    public List<Employee> getEmployeesByEmployer(String employerEmail) {
+        Employer employer = employerRepository.findByEmail(employerEmail);
+        return employeeRepository.findEmployeesByEmployer(employer);
     }
 
 

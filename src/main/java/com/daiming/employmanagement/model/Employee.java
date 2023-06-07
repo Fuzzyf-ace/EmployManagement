@@ -1,10 +1,14 @@
 package com.daiming.employmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Entity
+@Data
 @Table(name = "employees")
 public class Employee {
     @Id
@@ -12,7 +16,7 @@ public class Employee {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "email", nullable = false, length = 45)
+    @Column(name = "email", nullable = false, unique = true, length = 45)
     private String email;
 
     @Lob
@@ -20,22 +24,27 @@ public class Employee {
     private String password;
 
     @Column(name = "first_name", length = 45)
+    @JsonProperty("first_name")
     private String firstName;
 
     @Column(name = "last_name", length = 45)
+    @JsonProperty("last_name")
     private String lastName;
 
     @Column(name = "active")
-    private Boolean active;
+    private Boolean active = true;
 
     @Column(name = "pay_rate", precision = 10)
+    @JsonProperty("pay_rate")
     private BigDecimal payRate;
 
     @Column(name = "user_role", length = 45)
+    @JsonProperty("user_role")
     private UserRole userRole = UserRole.EMPLOYEE;
 
-    @JoinColumn(name = "employer_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employer")
+    @JsonIgnore
+    @ManyToOne
     private Employer employer;
 
     public Long getId() {

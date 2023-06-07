@@ -19,10 +19,9 @@ public class EmployeeController {
     EmployeeService employeeService;
     @PutMapping("/employer/addEmployee")
     public void addEmployee(@RequestBody Employee employee, Principal principal) {
-        principal.getName();
-        System.out.println(principal.getName());
-//        employeeService.addEmployee();
-
+        System.out.println("principal: " + principal.getName());
+        System.out.println("employee: " + employee.toString());
+        employeeService.addEmployee(employee, principal.getName());
     }
 
     @DeleteMapping("/employer/deleteEmployee")
@@ -37,9 +36,9 @@ public class EmployeeController {
 
     @GetMapping("/employer/getEmployees")
     public List<Employee> getEmployees(Principal principal) {
-        Pageable pageable = PageRequest.of(0, 5); // Create a Pageable object for pagination
-        Page<Employee> employeesPage = employeeService.getEmployeesByEmployer(0L, pageable);
-        List<Employee> employees = employeesPage.getContent();
+//        Pageable pageable = PageRequest.of(0, 5);
+        List<Employee> employees = employeeService.getEmployeesByEmployer(principal.getName());
+//        List<Employee> employees = employeesPage.getContent();
         return employees;
     }
 }

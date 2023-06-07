@@ -13,7 +13,7 @@ public class Employer {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "email", nullable = false, length = 45)
+    @Column(name = "email", nullable = false, unique = true, length = 45)
     private String email;
 
     @Lob
@@ -32,7 +32,7 @@ public class Employer {
     @JsonProperty("user_role")
     private UserRole userRole = UserRole.EMPLOYER;
 
-    @OneToMany
+    @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Employee> employees;
 
     public Long getId() {

@@ -36,7 +36,9 @@ public class SecurityConfig {
                             .requestMatchers("/employee/login").permitAll()
                             .requestMatchers("/employer/login").permitAll()
                             .requestMatchers("/employer/signup").permitAll()
-                            .requestMatchers("/employee/signup").hasRole(UserRole.EMPLOYER.name())
+                            .requestMatchers("/employee/signup").hasAuthority(UserRole.EMPLOYER.name())
+                            .requestMatchers("/employee/*").hasAuthority(UserRole.EMPLOYEE.name())
+                            .requestMatchers("/employer/*").hasAuthority(UserRole.EMPLOYER.name())
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
