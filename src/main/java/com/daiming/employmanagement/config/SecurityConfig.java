@@ -51,17 +51,6 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public DataSource getDataSource()
-//    {
-//        DriverManagerDataSource dataSource =  new DriverManagerDataSource();
-////        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-////        dataSource.setUrl("jdbc:mysql://daimingyang.couxfnqwwltv.us-east-2.rds.amazonaws.com:3306/employmanagement");
-////        dataSource.setUsername("dieyoung");
-////        dataSource.setPassword("DDVPismylove456~");
-//        return dataSource;
-//    }
-
     @Bean
     public UserDetailsManager users() {
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
