@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Data
@@ -46,6 +47,10 @@ public class Employee {
     @JsonIgnore
     @ManyToOne
     private Employer employer;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<WorkRecord> workRecords;
 
     public Long getId() {
         return id;

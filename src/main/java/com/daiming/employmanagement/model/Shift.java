@@ -1,8 +1,10 @@
 package com.daiming.employmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "shifts")
@@ -12,6 +14,13 @@ public class Shift {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "employer")
+    private Employer employer;
+
+    @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<WorkRecord> workRecords;
     @Lob
     @Column(name = "description", nullable = false)
     private String description;
@@ -54,4 +63,19 @@ public class Shift {
         this.endTime = endTime;
     }
 
+    public Employer getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(Employer employer) {
+        this.employer = employer;
+    }
+
+    public List<WorkRecord> getWorkRecords() {
+        return workRecords;
+    }
+
+    public void setWorkRecords(List<WorkRecord> workRecords) {
+        this.workRecords = workRecords;
+    }
 }

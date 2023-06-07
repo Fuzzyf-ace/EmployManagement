@@ -37,6 +37,9 @@ public class Employer {
     @JsonIgnore
     private List<Employee> employees;
 
+    @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Shift> shifts;
     public Long getId() {
         return id;
     }
