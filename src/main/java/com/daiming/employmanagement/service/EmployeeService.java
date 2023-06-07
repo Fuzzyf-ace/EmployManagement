@@ -81,6 +81,7 @@ public class EmployeeService {
      * employer can manage employee's and pay rate
      * @param employee
      */
+    @Transactional
     public void updateEmployeeByEmployer(Employee employee) {
         Employee storedEmployee =  employeeRepository.findByEmail(employee.getEmail());
         if (employee.getPayRate() != null) {
