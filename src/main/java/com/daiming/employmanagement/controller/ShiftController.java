@@ -23,7 +23,7 @@ public class ShiftController {
         shiftService.addShift(shift, principal.getName());
     }
 
-    @GetMapping("/employer/getShift")
+    @GetMapping("/employer/getShifts")
     public List<Shift> getShifts(Principal principal) {
         return shiftService.getShiftsByEmployer(principal.getName());
     }

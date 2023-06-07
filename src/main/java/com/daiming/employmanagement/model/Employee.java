@@ -22,6 +22,7 @@ public class Employee {
 
     @Lob
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(name = "first_name", length = 45)

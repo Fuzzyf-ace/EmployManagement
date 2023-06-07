@@ -1,5 +1,6 @@
 package com.daiming.employmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -21,9 +22,11 @@ public class WorkRecord {
     private Shift shift;
 
     @Column(name = "start_time")
+    @JsonProperty("start_time")
     private Instant startTime;
 
     @Column(name = "end_time")
+    @JsonProperty("end_time")
     private Instant endTime;
 
     public Long getId() {

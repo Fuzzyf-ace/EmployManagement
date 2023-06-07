@@ -1,6 +1,7 @@
 package com.daiming.employmanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -26,9 +27,11 @@ public class Shift {
     private String description;
 
     @Column(name = "start_time", nullable = false)
+    @JsonProperty("start_time")
     private Instant startTime;
 
     @Column(name = "end_time", nullable = false)
+    @JsonProperty("end_time")
     private Instant endTime;
 
     public Long getId() {

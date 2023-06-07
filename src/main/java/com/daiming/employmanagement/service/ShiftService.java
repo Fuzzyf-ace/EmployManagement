@@ -30,7 +30,14 @@ public class ShiftService {
         return shiftRepository.findShiftsByEmployer(employer);
     }
 
+    @Transactional
     public void deleteShift(Long id) {
+        Shift shift = shiftRepository.findShiftsById(id);
+        Employer employer = shift.getEmployer();
+
+        employer.getShifts().remove(shift);
+        employerRepository.save(employer);
+
         shiftRepository.deleteById(id);
     }
 
