@@ -42,7 +42,7 @@ public class ShiftService {
 
     @Transactional
     public void deleteShift(Long id) {
-        Shift shift = shiftRepository.findShiftsById(id);
+        Shift shift = shiftRepository.findShiftById(id);
         Employer employer = shift.getEmployer();
 
         employer.getShifts().remove(shift);
@@ -53,7 +53,7 @@ public class ShiftService {
 
     @Transactional
     public void updateShift(Shift shift) {
-        Shift storedShift = shiftRepository.findShiftsById(shift.getId());
+        Shift storedShift = shiftRepository.findShiftById(shift.getId());
         if (shift.getDescription() != null) {
             storedShift.setDescription(shift.getDescription());
         }
@@ -68,7 +68,7 @@ public class ShiftService {
 
     @Transactional
     public void acceptShift(Long shiftId, String employeeEmail) {
-        Shift shift = shiftRepository.findShiftsById(shiftId);
+        Shift shift = shiftRepository.findShiftById(shiftId);
         Employee employee = employeeRepository.findByEmail(employeeEmail);
         shift.setEmployee(employee);
         shiftRepository.save(shift);

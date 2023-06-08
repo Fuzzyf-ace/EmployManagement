@@ -14,6 +14,6 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
 
     List<Shift> findShiftsByEmployee(Employee employee);
 
-    Shift findShiftsById(Long id);
+    Shift findShiftById(Long id);
 
 }

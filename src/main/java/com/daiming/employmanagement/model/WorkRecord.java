@@ -1,5 +1,6 @@
 package com.daiming.employmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -15,6 +16,7 @@ public class WorkRecord {
 
     @ManyToOne
     @JoinColumn(name = "employee")
+    @JsonIgnore
     private Employee employee;
 
     @JoinColumn(name = "shift")
@@ -37,11 +39,11 @@ public class WorkRecord {
         this.id = id;
     }
 
-    public Shift getShifts() {
+    public Shift getShift() {
         return shift;
     }
 
-    public void setShifts(Shift shift) {
+    public void setShift(Shift shift) {
         this.shift = shift;
     }
 
