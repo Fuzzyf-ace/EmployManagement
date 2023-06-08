@@ -1,5 +1,8 @@
 package com.daiming.employmanagement.service;
 
+import com.daiming.employmanagement.exception.EmployeeDoesNotExistException;
+import com.daiming.employmanagement.exception.ShiftDoesNotExistException;
+import com.daiming.employmanagement.exception.WorkRecordDoesNotExist;
 import com.daiming.employmanagement.model.Employee;
 import com.daiming.employmanagement.model.Employer;
 import com.daiming.employmanagement.model.Shift;
@@ -31,16 +34,24 @@ public class WorkRecordService {
      * @param employeeEmail
      * @param shiftId
      */
-    @Transactional
     public void startWork(String employeeEmail, Long shiftId) {
-        Employee employee = employeeRepository.findByEmail(employeeEmail);
-        Shift shift = shiftRepository.findShiftById(shiftId);
+        Employee employee = null;
+        Shift shift = null;
+        WorkRecord workRecord = null;
+        employee = employeeRepository.findByEmail(employeeEmail);
+        shift = shiftRepository.findShiftById(shiftId);
+        if (employee == null) {
+            throw new EmployeeDoesNotExistException("Employee does not exist");
+        }
+        if (shift == null) {
+            throw new ShiftDoesNotExistException("Shift does not exist");
+        }
         Instant startTime = Instant.now();
-        System.out.println("startTime: " + startTime);
-        WorkRecord workRecord = new WorkRecord();
+        workRecord = new WorkRecord();
         workRecord.setEmployee(employee);
         workRecord.setShift(shift);
         workRecord.setStartTime(startTime);
+
         workRecordRepository.save(workRecord);
     }
 
@@ -49,9 +60,14 @@ public class WorkRecordService {
      * @param workRecordId
      */
     public void endWork(Long workRecordId) {
-        WorkRecord workRecord = workRecordRepository.findWorkRecordById(workRecordId);
-        System.out.print(Instant.now());
-        workRecord.setEndTime(Instant.now());
+        WorkRecord workRecord = null;
+        workRecord = workRecordRepository.findWorkRecordById(workRecordId);
+        try {
+            workRecord.setEndTime(Instant.now());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            throw new WorkRecordDoesNotExist("Work record does not exist");
+        }
         workRecordRepository.save(workRecord);
     }
 

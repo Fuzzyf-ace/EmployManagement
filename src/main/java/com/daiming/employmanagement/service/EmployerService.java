@@ -28,7 +28,7 @@ public class EmployerService {
         employerRepository.save(employer);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new AddUserFailedException("add user failed");
+            throw new AddUserFailedException("User with the same email already exists");
         }
     }
 
@@ -37,9 +37,7 @@ public class EmployerService {
         if (!authenticate(employer)) {
             throw new AuthenticationFailedException("Wrong password");
         }
-
         return new Token(jwtUtil.generateToken("EMPLOYER" + employer.getEmail()));
-
     }
 
     private boolean authenticate(Employer employer) {

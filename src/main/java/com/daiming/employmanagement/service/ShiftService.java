@@ -1,5 +1,8 @@
 package com.daiming.employmanagement.service;
 
+import com.daiming.employmanagement.exception.EmployeeDoesNotExistException;
+import com.daiming.employmanagement.exception.EmployerDoesNotExistException;
+import com.daiming.employmanagement.exception.ShiftDoesNotExistException;
 import com.daiming.employmanagement.model.Employee;
 import com.daiming.employmanagement.model.Employer;
 import com.daiming.employmanagement.model.Shift;
@@ -22,28 +25,41 @@ public class ShiftService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Transactional
     public void addShift(Shift shift, String employerEmail) {
         Employer employer = employerRepository.findByEmail(employerEmail);
         shift.setEmployer(employer);
         shiftRepository.save(shift);
     }
-    @Transactional
     public List<Shift> getShiftsByEmployer(String employerEmail) {
-        Employer employer = employerRepository.findByEmail(employerEmail);
+        Employer employer = null;
+        try {
+            employer = employerRepository.findByEmail(employerEmail);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new EmployerDoesNotExistException("Employer does not exist");
+        }
         return shiftRepository.findShiftsByEmployer(employer);
     }
-    @Transactional
     public List<Shift> getShiftsByEmployee(String employeeEmail) {
         Employee employee = employeeRepository.findByEmail(employeeEmail);
+        if (employee == null) {
+            throw new EmployeeDoesNotExistException("Employee does not exist");
+        }
         Employer employer = employee.getEmployer();
         return shiftRepository.findShiftsByEmployer(employer);
     }
 
     @Transactional
     public void deleteShift(Long id) {
-        Shift shift = shiftRepository.findShiftById(id);
-        Employer employer = shift.getEmployer();
+        Shift shift = null;
+        Employer employer = null;
+        try {
+            shift = shiftRepository.findShiftById(id);
+            employer = shift.getEmployer();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ShiftDoesNotExistException("Shift does not exist");
+        }
 
         employer.getShifts().remove(shift);
         employerRepository.save(employer);
@@ -51,9 +67,11 @@ public class ShiftService {
         shiftRepository.deleteById(id);
     }
 
-    @Transactional
     public void updateShift(Shift shift) {
         Shift storedShift = shiftRepository.findShiftById(shift.getId());
+        if (storedShift == null) {
+            throw new ShiftDoesNotExistException("Shift does not exist");
+        }
         if (shift.getDescription() != null) {
             storedShift.setDescription(shift.getDescription());
         }
@@ -66,9 +84,12 @@ public class ShiftService {
         shiftRepository.save(storedShift);
     }
 
-    @Transactional
     public void acceptShift(Long shiftId, String employeeEmail) {
-        Shift shift = shiftRepository.findShiftById(shiftId);
+        Shift shift = null;
+        shift = shiftRepository.findShiftById(shiftId);
+        if (shift == null) {
+            throw new ShiftDoesNotExistException("Shift does not exist");
+        }
         Employee employee = employeeRepository.findByEmail(employeeEmail);
         shift.setEmployee(employee);
         shiftRepository.save(shift);
@@ -76,6 +97,9 @@ public class ShiftService {
 
     public List<Shift> getShiftsAcceptedByEmployee(String employeeEmail) {
         Employee employee = employeeRepository.findByEmail(employeeEmail);
+        if (employee == null) {
+            throw new EmployeeDoesNotExistException("Employee does not exist");
+        }
         return shiftRepository.findShiftsByEmployee(employee);
     }
 }
