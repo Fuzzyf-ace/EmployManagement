@@ -19,7 +19,7 @@ public class Employer {
 
     @Lob
     @Column(name = "password", nullable = false)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "first_name", length = 45)

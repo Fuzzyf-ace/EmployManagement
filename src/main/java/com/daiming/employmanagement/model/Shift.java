@@ -17,7 +17,12 @@ public class Shift {
 
     @ManyToOne
     @JoinColumn(name = "employer")
+    @JsonIgnore
     private Employer employer;
+
+    @ManyToOne
+    @JoinColumn(name = "employee")
+    private Employee employee;
 
     @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
@@ -80,5 +85,13 @@ public class Shift {
 
     public void setWorkRecords(List<WorkRecord> workRecords) {
         this.workRecords = workRecords;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

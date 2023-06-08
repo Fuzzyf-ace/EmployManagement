@@ -20,6 +20,7 @@ public class EmployerService {
 
     @Autowired
     EmployerRepository employerRepository;
+
     public void addEmployer(Employer employer) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         employer.setPassword(passwordEncoder.encode(employer.getPassword()));

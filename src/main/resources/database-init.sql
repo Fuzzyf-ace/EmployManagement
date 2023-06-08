@@ -48,11 +48,15 @@ CREATE TABLE shifts
 (
     id            BIGINT AUTO_INCREMENT NOT NULL,
     employer      BIGINT                NULL,
+    employee      BIGINT                NULL,
     `description` LONGTEXT              NOT NULL,
     start_time    datetime              NOT NULL,
     end_time      datetime              NOT NULL,
     CONSTRAINT pk_shifts PRIMARY KEY (id)
 );
+
+ALTER TABLE shifts
+    ADD CONSTRAINT FK_SHIFTS_ON_EMPLOYEE FOREIGN KEY (employee) REFERENCES employees (id);
 
 ALTER TABLE shifts
     ADD CONSTRAINT FK_SHIFTS_ON_EMPLOYER FOREIGN KEY (employer) REFERENCES employers (id);

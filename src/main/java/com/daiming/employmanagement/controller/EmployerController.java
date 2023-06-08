@@ -19,8 +19,9 @@ public class EmployerController {
     @Autowired
     EmployeeService employeeService;
 
-    @PostMapping("/employer/signup")
+    @PutMapping("/employer/signup")
     public String signup (@RequestBody Employer employer) {
+        System.out.println(employer.getPassword());
         employerService.addEmployer(employer);
         return employer.getFirstName();
     }

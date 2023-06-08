@@ -18,13 +18,28 @@ public class ShiftController {
     @Autowired
     ShiftService shiftService;
 
+    @GetMapping("/employee/getAllShifts")
+    public List<Shift> getShiftsByEmployee(Principal principal) {
+        return shiftService.getShiftsByEmployee(principal.getName());
+    }
+
+    @PostMapping("/employee/acceptShift")
+    public void acceptShift(@RequestBody Shift shift, Principal principal) {
+        shiftService.acceptShift(shift.getId(), principal.getName());
+    }
+
+    @GetMapping("/employee/getMyShifts")
+    public List<Shift> getShiftsAcceptedByEmployee(Principal principal) {
+        return shiftService.getShiftsAcceptedByEmployee(principal.getName());
+    }
+
     @PutMapping("/employer/addShift")
     public void addShift (@RequestBody Shift shift, Principal principal) {
         shiftService.addShift(shift, principal.getName());
     }
 
     @GetMapping("/employer/getShifts")
-    public List<Shift> getShifts(Principal principal) {
+    public List<Shift> getShiftsByEmployer(Principal principal) {
         return shiftService.getShiftsByEmployer(principal.getName());
     }
 

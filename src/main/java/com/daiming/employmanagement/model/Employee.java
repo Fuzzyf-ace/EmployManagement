@@ -22,7 +22,7 @@ public class Employee {
 
     @Lob
     @Column(name = "password", nullable = false)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "first_name", length = 45)
@@ -52,6 +52,10 @@ public class Employee {
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<WorkRecord> workRecords;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Shift> shifts;
 
     public Long getId() {
         return id;
@@ -125,4 +129,19 @@ public class Employee {
         this.employer = employer;
     }
 
+    public List<WorkRecord> getWorkRecords() {
+        return workRecords;
+    }
+
+    public void setWorkRecords(List<WorkRecord> workRecords) {
+        this.workRecords = workRecords;
+    }
+
+    public List<Shift> getShifts() {
+        return shifts;
+    }
+
+    public void setShifts(List<Shift> shifts) {
+        this.shifts = shifts;
+    }
 }
